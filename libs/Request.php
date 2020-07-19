@@ -11,14 +11,12 @@
     public $file;
     public $queryURL;
     public $controller;
-    public $requestUID;
     
     public function __construct()
     {
-      $this->queryURL=explode('/',trim($_SERVER['QUERY_STRING']))[1];
+      // $this->queryURL=explode('/',trim($_SERVER['QUERY_STRING']))[1];
       $this->controller=explode('/',trim($_SERVER['QUERY_STRING']))[0];
       $this->contentType=isset($_SERVER["CONTENT_TYPE"])?$_SERVER["CONTENT_TYPE"]:"html";
-      $this->requestUID=md5(uniqid(mt_rand(), true).microtime(true));
       if($this->contentType=="application/json"){
         $JSONRequest=json_decode(file_get_contents('php://input'),true);
         $this->input=$JSONRequest["input"];
