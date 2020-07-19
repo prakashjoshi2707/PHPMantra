@@ -1,0 +1,83 @@
+{% extends "Template/appThemeLight.html" %}
+{% block title %}Starter{% endblock %}
+{% block body %}
+<!-- html contents -->
+<!-- html contents -->
+<div class="row">
+    <div class="col-sm-9 pl-0 pr-0">
+        <div class="card">
+            <div class="row">
+                <div class="col">
+                <h5 class="pt-2 pl-4 m-0"><i class="fas fa-flask"></i> Measurement Unit</h5>
+                </div>
+                <div class="col">
+                <button type="button" class="close p-1" id="close-window" title="Close Window" data-toggle="tooltip">&times;</button>
+            </div>
+            </div>
+            <hr>
+            <div class="card-body">
+                <form id="form-unit" name="form-unit">
+                    <input type="hidden" class="form-control" id="id" name="id" placeholder="id">
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="unitType">Type</label>
+                            <select class="form-control" id="unitType" name="unitType" placeholder="Enter Unit Type">
+                                <option selected="" value="">Select Unit Type</option>
+                                <option value="Simple">Simple</option>
+                                <option value="Compound">Compound</option>
+                              </select>
+                            
+                        </div>
+                        <div class="col">
+                            <label for="unitFormalName">Formal Name</label>
+                            <input type="text" class="form-control" id="unitFormalName" name="unitFormalName" placeholder="Enter Formal Name">
+                        </div>
+                    </div>
+                    <div class="form-row pt-2">
+                        <div class="col">
+                            <label for="unitSymbol">Symbol</label>
+                            <input type="text" class="form-control" id="unitSymbol" name="unitSymbol" maxlength="3" placeholder="Enter Unit Symbol">
+                        </div>
+                        <div class="col">
+                            <label for="decimalPlace">Decimal Place</label>
+                            <input type="text" class="form-control" id="decimalPlace" name="decimalPlace" placeholder="Enter Decimal Place">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group pt-2">
+                        <label for="unitDescription">Description</label>
+                        <textarea class="form-control" id="unitDescription" name="unitDescription" rows="3"
+                            placeholder="Enter Description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit" id="submit">Add New Unit</button>
+                        <button class="btn btn-dark" type="reset">Reset</button>
+                      </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 text-nowarp">
+        <div class="page-menu-sidebar">
+            <div class="list-group list-group-custom pmd-list">
+                <a class="list-group-item list-group-item-action" href="#download">Download</a>
+                <a class="list-group-item list-group-item-action" href="#FolderStructure">Folder Structure</a>
+                <a class="list-group-item list-group-item-action" href="#setup">HTML Setup</a>
+                <a class="list-group-item list-group-item-action" href="#components">Use the components</a>
+                <a class="list-group-item list-group-item-action" href="#rules">Steps to Follow</a>
+                <a class="list-group-item list-group-item-action" href="#theming-with-sass">Theming with Sass</a>
+                <a class="list-group-item list-group-item-action" href="#next">What's next?</a>
+                <a class="list-group-item list-group-item-action" href="#download">Download</a>
+                <a class="list-group-item list-group-item-action" href="#FolderStructure">Folder Structure</a>
+                <a class="list-group-item list-group-item-action" href="#setup">HTML Setup</a>
+                <a class="list-group-item list-group-item-action" href="#components">Use the components</a>
+                <a class="list-group-item list-group-item-action" href="#rules">Steps to Follow</a>
+                <a class="list-group-item list-group-item-action" href="#theming-with-sass">Theming with Sass</a>
+                <a class="list-group-item list-group-item-action" href="#next">What's next?</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
