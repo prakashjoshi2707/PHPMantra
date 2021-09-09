@@ -15,7 +15,7 @@ sudo nano /etc/apache2/sites-available/phpmantra.conf
         ServerAlias www.phpmantra.com
         ServerAdmin admin@phpmantra.com
         DocumentRoot /var/www/phpmantra.com/html
-        <Directory /var/www/phpmantra>
+        <Directory /var/www/phpmantra.com/html>
             Options Indexes FollowSymLinks MultiViews
             AllowOverride All
             Require all granted
