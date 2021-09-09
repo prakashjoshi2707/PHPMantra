@@ -3,7 +3,7 @@ class Application
     constructor() {}
     static getPath(){
         let domain=window.location.origin;
-        let path= domain+'/phpmantra/';
+        let path= domain+'/';
         return path;        
     }
         

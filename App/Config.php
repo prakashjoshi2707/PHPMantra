@@ -20,19 +20,19 @@ class Config
      * Database name
      * @var string
      */
-    const DB_NAME = 'phpmantradb';
+    const DB_NAME = 'collegedb';
 
     /**
      * Database user
      * @var string
      */
-    const DB_USER = 'admin';
+    const DB_USER = 'prakash';
 
     /**
      * Database password
      * @var string
      */
-    const DB_PASSWORD = 'Joshi@123';
+    const DB_PASSWORD = 'Thakur@123';
     /**
      * Show or hide error messages on screen
      * @var boolean

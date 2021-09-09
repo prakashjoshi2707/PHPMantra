@@ -1,0 +1,5 @@
+#!/usr/bin/php
+<?php
+   $date=date("Y-M-d H:i:s a");
+   echo "Active: {$date} PHPMantra SDK running...\n";
+?>
