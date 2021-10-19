@@ -37,19 +37,16 @@
      set_exception_handler('Core\Error::exceptionHandler');
 
 
-    /**
-     * Routing for loading controller and action
-     */
-    $router = new Core\Router();
+     $router = new Core\Router();
 
-    // Add the routes
-    $router->add('', ['controller' => 'starter', 'action' => 'index']);
-    $router->add('donation', ['controller' => 'Donation', 'action' => 'index']);
-    $router->add('{controller}/{action}');
-    $router->add('{controller}/{id:\d+}/{action}');
-    $router->add('admin/{controller}/{action}', ['namespace' => 'Admin']);
-    
-    $router->dispatch($_SERVER['QUERY_STRING']);
-    // echo "<pre>";
-    // var_dump($router);
-    // echo "</pre>";
+     // Add the routes
+     $router->add('', ['controller' => 'Starter', 'action' => 'show']);
+     $router->add('donation', ['controller' => 'Donation', 'action' => 'index']);
+     $router->add('{controller}/{action}');
+     $router->add('{controller}/{id:\d+}/{action}');
+     $router->add('admin/{controller}/{action}', ['namespace' => 'Admin']);
+     
+     $router->dispatch($_SERVER['QUERY_STRING']);
+    //  echo "<pre>";
+    //  var_dump($router);
+    //  echo "</pre>";

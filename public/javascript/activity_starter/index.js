@@ -122,31 +122,70 @@ var starter = {
             $(this).css("border-color","#D4D5D7");   
         });
   },
-  displayPhoto:function(){
+  // displayPhoto:function(){
+  //   $(document).on("change","#file",function() {
+  //     FileUpload.show(this,'photo-show');
+  //   });
+  // },
+  // fileUpload:function(){
+  //   $(document).on("change","#file",function() { 
+  //     var form = $('form').get(1);
+  //     console.log(form);
+  //     AsyncTask.execute(Application.getPath()+'starter/uploadPhoto', 'POST', form, null).
+  //     done(function(response){
+  //       console.log("Upload"+response);
+  //       $("#filename").val(response);
+  //       //window.location.href = Application.getPath()+'participant/show';
+  //     }).fail(function(error){
+  //       console.log(error);
+  //     });
+  //   });
+  // },
+  file:function(){
     $(document).on("change","#file",function() {
-      FileUpload.show(this,'photo-show');
+      uploadFile();
     });
-  },
-  fileUpload:function(){
-    $(document).on("change","#file",function() { 
-      var form = $('form').get(1);
-      console.log(form);
-      AsyncTask.execute(Application.getPath()+'starter/uploadPhoto', 'POST', form, null).
-      done(function(response){
-        console.log("Upload"+response);
-        $("#filename").val(response);
-        //window.location.href = Application.getPath()+'participant/show';
-      }).fail(function(error){
-        console.log(error);
-      });
-    });
+    function uploadFile() {
+  var file = $("$file").files[0];
+  // alert(file.name+" | "+file.size+" | "+file.type);
+  var formdata = new FormData();
+  formdata.append("file", file);
+  var ajax = new XMLHttpRequest();
+  ajax.upload.addEventListener("progress", progressHandler, false);
+  ajax.addEventListener("load", completeHandler, false);
+  ajax.addEventListener("error", errorHandler, false);
+  ajax.addEventListener("abort", abortHandler, false);
+  ajax.open("POST", "file_upload_parser.php"); // http://www.developphp.com/video/JavaScript/File-Upload-Progress-Bar-Meter-Tutorial-Ajax-PHP
+  //use file_upload_parser.php from above url
+  ajax.send(formdata);
+}
+
+function progressHandler(event) {
+  $("#loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+  var percent = (event.loaded / event.total) * 100;
+  $("#progressBar").value = Math.round(percent);
+  $("#status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+}
+
+function completeHandler(event) {
+  $("#status").innerHTML = event.target.responseText;
+  $("#progressBar").value = 0; //wil clear progress bar after successful upload
+}
+
+function errorHandler(event) {
+  $("#status").innerHTML = "Upload Failed";
+}
+
+function abortHandler(event) {
+  $("#status").innerHTML = "Upload Aborted";
+}
   },
   handleListener:function handleListener(){
     this.import();
     this.validate();
     this.removeValidate();
-    this.displayPhoto();
-    this.fileUpload();
+    // this.displayPhoto();
+    this.file();
   }
 };
 starter.init();

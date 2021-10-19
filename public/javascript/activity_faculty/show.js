@@ -1,7 +1,7 @@
    "use strict";
-   var {{classname}} = {
-     url: Application.getPath()+'{{objectname}}/api',
-     {{objectname}}Table:null,
+   var Faculty = {
+     url: Application.getPath()+'faculty/api',
+     facultyTable:null,
      tab:"showAll",
      init: function init() {
        this.bindListener();
@@ -15,7 +15,7 @@
      },
 
      datatable: function(deleted=0){
-      {{classname}}.{{objectname}}Table=$('#{{objectname}}').DataTable({
+      Faculty.facultyTable=$('#faculty').DataTable({
           "processing": true,
           "responsive":true,
           "serverSide": true,
@@ -56,7 +56,7 @@
             }
           ],
           "ajax" : {
-            url : Application.getPath()+'{{objectname}}/datatable',
+            url : Application.getPath()+'faculty/datatable',
             method : "POST",
             data:{
               deleted:deleted
@@ -97,7 +97,7 @@
             tag:"delete"
           }
         };
-        {{classname}}.confirmTask(Request,"delete",1);
+        Faculty.confirmTask(Request,"delete",1);
         
       });
       },
@@ -112,28 +112,28 @@
               tag:"restore"
             }
           };
-          {{classname}}.confirmTask(Request,"restore",1);          
+          Faculty.confirmTask(Request,"restore",1);          
         });
         },
       edit:function(){
         $(document).on("click", ".btn-edit", async function(event){
           event.preventDefault();
           var id=$(this).attr('edit-row');
-          window.location.href=Application.getPath()+'{{objectname}}/index?id='+id;
+          window.location.href=Application.getPath()+'faculty/index?id='+id;
         });
       },
       detail:function(){
         $(document).on("click", ".btn-detail", async function(event){
           event.preventDefault();
           var id=$(this).attr('get-row');
-          window.location.href=Application.getPath()+'{{objectname}}/detail?id='+id;
+          window.location.href=Application.getPath()+'faculty/detail?id='+id;
         });
       },
       showAll:function(){
         $(document).on("click", "#tab-show-all", async function(event){
           event.preventDefault();
-          {{classname}}.tab="showAll";
-          {{classname}}.datatable(0);
+          Faculty.tab="showAll";
+          Faculty.datatable(0);
          $(".nav-link").removeClass("active");
          $("#btn-delete-selected").text("Delete Selected");
          $("#check-all").prop('checked', false); 
@@ -145,8 +145,8 @@
       showTrash:function(){
         $(document).on("click", "#tab-show-trash", async function(event){
           event.preventDefault();
-          {{classname}}.tab="showTrash";
-          {{classname}}.datatable(1);
+          Faculty.tab="showTrash";
+          Faculty.datatable(1);
          $(".nav-link").removeClass("active");
          $("#btn-restore-selected").text("Restore Selected");
          $("#check-all").prop('checked', false); 
@@ -162,7 +162,7 @@
           $(".check-item").prop("checked",$(this).prop("checked"));
           var item=$('input:checkbox:checked').length-1;
           if(item>=1){
-            if({{classname}}.tab==="showAll"){
+            if(Faculty.tab==="showAll"){
               $("#btn-delete-selected").show();
               $("#btn-delete-selected").text("Delete ("+item +") Selected");
             }else{
@@ -182,7 +182,7 @@
           $("#check-all").prop('checked', false); 
           var item=$('input:checkbox:checked').length;
           if(item>=1){
-            if({{classname}}.tab==="showAll"){
+            if(Faculty.tab==="showAll"){
               $("#btn-delete-selected").show();
               $("#btn-delete-selected").text("Delete ("+item +") Selected");
             }else{
@@ -211,7 +211,7 @@
             };
             if(idArray.length!==0){
             $('#alert').modal('show');
-            {{classname}}.confirmTask(Request,"delete",idArray.length);
+            Faculty.confirmTask(Request,"delete",idArray.length);
             } 
         });
       },
@@ -232,7 +232,7 @@
             };
             if(idArray.length!==0){
               $('#alert').modal('show');
-              {{classname}}.confirmTask(Request,"restore",idArray.length); 
+              Faculty.confirmTask(Request,"restore",idArray.length); 
             }
               
            
@@ -249,7 +249,7 @@
        
         $(document).on('click', '#btn-okay', async function() {
             
-            let Response = await fetch({{classname}}.url,{
+            let Response = await fetch(Faculty.url,{
 
               method: 'DELETE',
               headers:{
@@ -261,7 +261,7 @@
             });
             let result = await Response.json();
                 
-            {{classname}}.{{objectname}}Table.ajax.reload();            
+            Faculty.facultyTable.ajax.reload();            
             $("#check-all").prop('checked', false); 
             $("#btn-delete-selected").hide();
             $("#btn-restore-selected").hide();
@@ -288,6 +288,6 @@
         this.checkSingle();
      }
    };
-   {{classname}}.init();
+   Faculty.init();
 
    

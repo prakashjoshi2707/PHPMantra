@@ -10,6 +10,7 @@ use libs\Header;
 use libs\Request;
 use libs\Response;
 use libs\Validation;
+use libs\Session;
 
 /**
  * Home controller
@@ -145,10 +146,10 @@ class {{classname}}Activity extends Controller
         ${{objectname}}=new {{classname}}();
         echo  ${{objectname}}->generateContent();
     }
-    public function datatable()
+    public function datatable(Request $request)
     {
         ${{objectname}}=new {{classname}}();
-        echo  ${{objectname}}->datatable();
+        echo  ${{objectname}}->datatable($request->input["deleted"]);
     }
     public function store(Request $request)
     {
@@ -188,9 +189,12 @@ class {{classname}}Activity extends Controller
 
     public function delete(Request $request)
     {
+       //Please execute the generate action then copy paste the class definition 
+       //================REMOVE=================
        ${{objectname}}=new {{classname}}();
        $response=${{objectname}}->delete("id=".$request->input["id"]);
        echo($response->toJSON());
+       //=================EXAMPLE=================
         
     }
 }

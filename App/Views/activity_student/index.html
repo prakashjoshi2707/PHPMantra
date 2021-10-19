@@ -1,0 +1,15 @@
+{% extends "Template/appThemeLight.html" %}
+{% block title %}Student Index{% endblock %}
+{% block body %}
+<form method="POST" action="student/api" enctype="multipart/form-data" id="form-student" name="form-student">
+    
+    <input type="hidden" class="form-control" id="id" name="id"  placeholder="Enter Student ID">
+    <label for="name" class="form-label">Full Name</label>
+    <input type="text" class="form-control" id="name" name="name" maxlength="50" placeholder="Enter Full Name">
+    <label for="address" class="form-label">Address</label>
+    <input type="text" class="form-control" id="address" name="address" maxlength="150" placeholder="Enter Address">
+    <label for="phone" class="form-label">Phone Number</label>
+    <input type="text" class="form-control" id="phone" name="phone" maxlength="10" placeholder="Enter Phone Number">
+  <button type="submit" id="submit" name="submit" class="btn btn-primary">SAVE</button>
+  </form>
+{% endblock %}

@@ -138,6 +138,16 @@ class StarterActivity extends Controller
     {
         
     }
+    public function generate()
+    {
+        $starter=new Starter();
+        echo  $starter->generateContent();
+    }
+    public function datatable()
+    {
+        $starter=new Starter();
+        echo  $starter->datatable();
+    }
     public function store(Request $request)
     {
         // var_dump($request);
@@ -177,5 +187,18 @@ class StarterActivity extends Controller
        $response=$starter->delete("id=".$request->input["id"]);
        echo($response->toJSON());
         
+    }
+    public function uploadAction(Request $request)
+    {
+        $starter=new Starter();
+        $starter->file=$request->file['file'];
+        $response=$starter->upload("document");
+        if($response->success){
+            echo "done";
+            echo $response->filename;
+            // //to store or update  call the method 
+            // $this->store($request); OR $this->update($request);
+        }
+       // echo json_encode($response);
     }
 }
