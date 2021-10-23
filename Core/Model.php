@@ -838,5 +838,188 @@ public static function getTotal".($className)."(\$deleted=0)
        echo htmlspecialchars("<span id=".$value['COLUMN_NAME']."></span><br>");
        echo "</pre>";
       }
+      echo "<hr>"; 
+      echo "<h1>ANDROID Global Configuration</h1>";
+      echo "<h4>Add dependency in app > Gradle Scripts > build.gradle(app)</h4> ";
+      echo "implementation 'com.android.volley:volley:1.2.1'"; 
+      echo "<br>";
+      echo "<h4>Add permissions AndroidManifest.xml </h4> ";
+      echo  nl2br(htmlspecialchars('<!--permissions for INTERNET-->
+      <uses-permission android:name="android.permission.INTERNET"/>
+        '));
+        
+      echo "<hr>";
+   
+      echo "<h1>ANDROID UI.xml</h1>";
+      foreach ($result as $value){
+  
+        if (
+          $value['COLUMN_NAME']!="createdAt"  &&  $value['COLUMN_NAME']!="createdBy"  && $value['COLUMN_NAME']!="createdFrom"&&
+          $value['COLUMN_NAME']!="modifiedAt" && $value['COLUMN_NAME']!="modifiedBy" && $value['COLUMN_NAME']!="modifiedFrom"&&
+          $value['COLUMN_NAME']!="deletedAt" && $value['COLUMN_NAME']!="deletedBy" && $value['COLUMN_NAME']!="deletedFrom" && $value['COLUMN_NAME']!="deleted" && $value['COLUMN_NAME']!="status"
+        ) {
+            $max=$value['DATA_TYPE']=="varchar" || $value['DATA_TYPE']=="text" || $value['DATA_TYPE']=="mediumtext" || $value['DATA_TYPE']=="longtext"?"android:maxLength=\"".$value['CHARACTER_MAXIMUM_LENGTH']."\"":false;
+            $formFiled=$value['DATA_TYPE']=="text"?
+       '
+        <EditText
+          android:id="@+id/et'.ucwords($value['COLUMN_NAME']).'"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ems="10"
+          '.$max.'
+          android:hint="Enter '.ucwords($value['COLUMN_COMMENT']).'"
+          android:inputType="textMultiLine" />
+        ':
+         $formFiled=$value['DATA_TYPE']=="int"? '
+         <EditText
+          android:id="@+id/et'.ucwords($value['COLUMN_NAME']).'"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ems="10"
+         '.$max.'
+          android:hint="Enter '.ucwords($value['COLUMN_COMMENT']).'"
+          android:inputType="number" />
+       '
+        :
+           '
+        <EditText
+          android:id="@+id/et'.ucwords($value['COLUMN_NAME']).'"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ems="10"
+          '.$max.'
+          android:hint="Enter '.ucwords($value['COLUMN_COMMENT']).'"
+          android:inputType="text" />
+       '
+        ;
+
+            echo "<pre>";
+            echo htmlspecialchars('
+        <TextView
+          android:id="@+id/tv'.ucwords($value['COLUMN_NAME']).'"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="'.ucwords($value['COLUMN_COMMENT']).'" />
+ '.$formFiled);
+            
+            
+        }
+        }
+        echo  htmlspecialchars('
+        <Button
+          android:id="@+id/btnSave"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="Save" />
+        ');
+        
+        echo  htmlspecialchars('
+        <Button
+          android:id="@+id/btnClose"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="Close" />
+        ');
+        echo "</pre>";
+
+        echo "<hr>";
+      echo "<h1>ANDROID JAVA Code</h1>";
+      echo "<h1>Class Definition</h1>";
+      $classVariable="";
+      $localVaraible="";
+      $properties="";
+      $getter="";
+      $setter="";
+      foreach ($result as $value){
+        if (
+          $value['COLUMN_NAME']!="createdAt"  &&  $value['COLUMN_NAME']!="createdBy"  && $value['COLUMN_NAME']!="createdFrom"&&
+          $value['COLUMN_NAME']!="modifiedAt" && $value['COLUMN_NAME']!="modifiedBy" && $value['COLUMN_NAME']!="modifiedFrom"&&
+          $value['COLUMN_NAME']!="deletedAt" && $value['COLUMN_NAME']!="deletedBy" && $value['COLUMN_NAME']!="deletedFrom" && $value['COLUMN_NAME']!="deleted" && $value['COLUMN_NAME']!="status"
+        ) {
+            $classVariable=$classVariable.$value['COLUMN_NAME'].", ";
+            $localVaraible=$localVaraible."String ".$value['COLUMN_NAME'].", ";
+            $properties=$properties."this.".$value['COLUMN_NAME']." = ".$value['COLUMN_NAME'].";\n &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            $getter=$getter.
+            "public String get".ucwords($value['COLUMN_NAME'])."() {
+            return this.".$value['COLUMN_NAME'].";
+        }\n\n &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+        $setter=$setter.
+            "public void set".ucwords($value['COLUMN_NAME'])."() {
+            this.".$value['COLUMN_NAME']." = ".$value['COLUMN_NAME'].";
+        }\n\n &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        }
+       
+       }
+       $classVariable= rtrim($classVariable, ', ');
+       $localVaraible= rtrim($localVaraible, ', ');
+       
+      echo "<pre>
+      public class $className {
+
+        private String $classVariable;
+        
+        public $className($localVaraible) {
+          $properties
+        }
+    
+        //getter and setter
+        $getter
+        $setter
+    }
+      </pre>";
+      echo "<hr>";
+
+      
+
+
+      echo "//The view objects<br>";
+      echo "private EditText ";
+      $variable="";
+      foreach ($result as $value){
+        if (
+          $value['COLUMN_NAME']!="createdAt"  &&  $value['COLUMN_NAME']!="createdBy"  && $value['COLUMN_NAME']!="createdFrom"&&
+          $value['COLUMN_NAME']!="modifiedAt" && $value['COLUMN_NAME']!="modifiedBy" && $value['COLUMN_NAME']!="modifiedFrom"&&
+          $value['COLUMN_NAME']!="deletedAt" && $value['COLUMN_NAME']!="deletedBy" && $value['COLUMN_NAME']!="deletedFrom" && $value['COLUMN_NAME']!="deleted" && $value['COLUMN_NAME']!="status"
+        ) {
+            $variable=$variable."et".ucwords($value['COLUMN_NAME']).", ";
+        }
+       
+       }
+       echo rtrim($variable, ', ').";<br>";
+       echo "private Button btnSave, btnClose;<br><br>";
+
+       echo "//initializing view objects<br> ";
+       foreach ($result as $value){
+        if (
+          $value['COLUMN_NAME']!="createdAt"  &&  $value['COLUMN_NAME']!="createdBy"  && $value['COLUMN_NAME']!="createdFrom"&&
+          $value['COLUMN_NAME']!="modifiedAt" && $value['COLUMN_NAME']!="modifiedBy" && $value['COLUMN_NAME']!="modifiedFrom"&&
+          $value['COLUMN_NAME']!="deletedAt" && $value['COLUMN_NAME']!="deletedBy" && $value['COLUMN_NAME']!="deletedFrom" && $value['COLUMN_NAME']!="deleted" && $value['COLUMN_NAME']!="status"
+        ) {
+            
+        echo "et".ucwords($value['COLUMN_NAME'])." = findViewById(R.id.et".ucwords($value['COLUMN_NAME']).");<br>";
+        }
+       
+       }
+       echo "btnSave =findViewById(R.id.btnSave);<br>";
+       echo "btnClose =findViewById(R.id.btnClose);<br><br>";
+       echo "btnSave.setOnClickListener(this);<br>";
+       echo "btnClose.setOnClickListener(this);<br><br>";
+       echo "<pre>
+@Override
+public void onClick(View v) {
+  switch (v.getId()) {
+    case R.id.btnSave:
+        // onClick save button
+        break;
+    case R.id.btnClose:
+        // onClick close button
+        finish();
+        break;
+    default:
+        break;
+  }
+}
+       </pre>";
     }
 }
