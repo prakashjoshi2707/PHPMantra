@@ -924,7 +924,7 @@ public static function getTotal".($className)."(\$deleted=0)
 
         echo "<hr>";
       echo "<h1>ANDROID JAVA Code</h1>";
-      echo "<h1>Class Definition</h1>";
+      echo "<h1>Class Definition (Create new class)</h1>";
       $classVariable="";
       $localVaraible="";
       $properties="";
