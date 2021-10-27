@@ -26,13 +26,13 @@ class Config
      * Database user
      * @var string
      */
-    const DB_USER = 'root';
+    const DB_USER = 'prakash';
 
     /**
      * Database password
      * @var string
      */
-    const DB_PASSWORD = 'password';
+    const DB_PASSWORD = 'Thakur@123';
     /**
      * Show or hide error messages on screen
      * @var boolean
