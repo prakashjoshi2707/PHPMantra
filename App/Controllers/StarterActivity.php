@@ -10,6 +10,8 @@ use libs\Header;
 use libs\Request;
 use libs\Response;
 use libs\Validation;
+use libs\Session;
+
 /**
  * Home controller
  *
@@ -24,9 +26,7 @@ class StarterActivity extends Controller
      */
     protected function before()
     {
-        //echo "(before) ";
-        //return false;
-      
+            
     }
 
     /**
@@ -36,8 +36,7 @@ class StarterActivity extends Controller
      */
     protected function after()
     {
-        //echo " (after)";
-
+       
     }
 
     /**
@@ -58,26 +57,27 @@ class StarterActivity extends Controller
     public function showAction()
     {
         View::renderTemplate('activity_starter/show.html', [
-            'title'    => 'Show',
+            'title'    => 'Starter',
             'javascript' => 'activity_starter/show.js',
             'style'=>'activity_starter/show.css',
             'records'=>1
         ]);
     }
 
-    public function uploadPhotoAction()
+    public function detailAction()
     {
-        $data=Json::writable();
-        Starter::setOnUploadFileListener();       
+        View::renderTemplate('activity_starter/detail.html', [
+            'title'    => 'Starter',
+            'javascript' => 'activity_starter/detail.js',
+            'style'=>'activity_starter/detail.css',
+            'records'=>1
+        ]);
     }
 
     public function api(Request $request)
     {
         $starter=new Starter();
         if(Request::GET()){
-            // $response=$recruiter->all(true); 
-            // echo $response->toJSON();  
-
             if (URL::hasQuery()) {
                 $response=$starter->get(URL::toAndOperator());
             } else {
@@ -86,16 +86,24 @@ class StarterActivity extends Controller
             echo $response->toJSON();
         }
         if(Request::POST()){
-           //$this->store($request);
            Validation::check($request,[
-               'name'=>[
-                   'required'=>true,
-                   'max'=>100
-               ],
-               'address'=>[
-                   'required'=>true,
-                   'max'=>100
-               ],
+            
+        'name'=>[
+                'required'=>true,
+                'max'=>250,
+              ],
+        'address'=>[
+                'required'=>true,
+                'max'=>65535,
+              ],
+        'phone'=>[
+                'required'=>true,
+                
+              ],
+        'email'=>[
+                'required'=>true,
+                'max'=>250,
+              ],
            ]);
 
            if (Validation::isPassed()) {
@@ -108,14 +116,26 @@ class StarterActivity extends Controller
         if(Request::PUT()){
             //echo "PUT";
             Validation::check($request,[
-                'name'=>[
+                'id'=>[
                     'required'=>true,
-                    'max'=>100
-                ],
-                'address'=>[
+                    
+                  ],
+            'name'=>[
                     'required'=>true,
-                    'max'=>100
-                ],
+                    'max'=>250,
+                  ],
+            'address'=>[
+                    'required'=>true,
+                    'max'=>65535,
+                  ],
+            'phone'=>[
+                    'required'=>true,
+                    
+                  ],
+            'email'=>[
+                    'required'=>true,
+                    'max'=>250,
+                  ],
             ]);
  
             if (Validation::isPassed()) {
@@ -143,23 +163,25 @@ class StarterActivity extends Controller
         $starter=new Starter();
         echo  $starter->generateContent();
     }
-    public function datatable()
+    public function datatable(Request $request)
     {
         $starter=new Starter();
-        echo  $starter->datatable();
+        echo  $starter->datatable($request->input["deleted"]);
     }
     public function store(Request $request)
     {
-        // var_dump($request);
-        // echo "<hr>";
         $starter=new Starter();
         $starter->name=$request->input["name"];
         $starter->address=$request->input["address"];
-        $response=$starter->save(); 
+        $starter->phone=$request->input["phone"];
+        $starter->email=$request->input["email"];
+        $starter->createdAt=date('Y-m-d H:i:s');
+        $starter->createdBy=Session::get('USERNAME');
+        $starter->createdFrom=$_SERVER['REMOTE_ADDR'];
+        $response=$starter->save();
         echo $response->toJSON();
-        //Header::setLocation("apii"); 
     }
-    public function showa(Request $request)
+    public function find(Request $request)
     {
         $starter=new Starter();
         $response=$starter->get("id=".$request->input["id"]);
@@ -177,28 +199,33 @@ class StarterActivity extends Controller
         $starter=new Starter();
         $starter->name=$request->input["name"];
         $starter->address=$request->input["address"];
+        $starter->phone=$request->input["phone"];
+        $starter->email=$request->input["email"];
+        $starter->modifiedAt=date('Y-m-d H:i:s');
+        $starter->modifiedBy=Session::get('USERNAME');
+        $starter->modifiedFrom=$_SERVER['REMOTE_ADDR'];
         $response=$starter->update("id=".$request->input["id"]);
         echo $response->toJSON();
     }
 
     public function delete(Request $request)
     {
+        if(is_array($request->input["id"])){
+            $id=implode(',', $request->input["id"]);
+         }else{
+           $id= $request->input["id"];
+         }
         $starter=new Starter();
-       $response=$starter->delete("id=".$request->input["id"]);
-       echo($response->toJSON());
-        
-    }
-    public function uploadAction(Request $request)
-    {
-        $starter=new Starter();
-        $starter->file=$request->file['file'];
-        $response=$starter->upload("document");
-        if($response->success){
-            echo "done";
-            echo $response->filename;
-            // //to store or update  call the method 
-            // $this->store($request); OR $this->update($request);
+        if($request->input["tag"]=="delete"){
+           $starter->deleted=1;
+         }else{
+           $starter->deleted=0;
         }
-       // echo json_encode($response);
+        $starter->deletedAt=date('Y-m-d H:i:s');
+        $starter->deletedBy=Session::get('USERNAME');
+        $starter->deletedFrom=$_SERVER['REMOTE_ADDR'];
+        $response=$starter->update(" id IN ($id) ");
+        echo $response->toJSON();
+        
     }
 }

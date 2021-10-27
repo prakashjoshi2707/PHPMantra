@@ -1,6 +1,6 @@
     "use strict";
-    var Student = {
-        url: Application.getPath() + 'student/api',
+    var Starter = {
+        url: Application.getPath() + 'starter/api',
         init: function init() {
             this.bindListener();
         },
@@ -15,7 +15,7 @@
         get: async function () {
             let id = Application.getParameterByName('id'); //URL parameter id
             if (id != undefined) {
-              let Response = await fetch(Student.url + '?id=' + id);
+              let Response = await fetch(Starter.url + '?id=' + id);
         
               if (Response.ok) { // if HTTP-status is 200-299
                 // get the response body (the method explained below)
@@ -34,4 +34,4 @@
             this.get();
         }
     };
-    Student.init();
+    Starter.init();

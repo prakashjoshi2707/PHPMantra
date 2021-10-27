@@ -1,57 +1,50 @@
 {% extends "Template/appThemeLight.html" %}
-{% block title %}Starter{% endblock %}
+{% block title %}Starter Show{% endblock %}
 {% block body %}
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:ital,wght@0,200;0,300;0,400;1,400&display=swap');
-  .owl-carousel{
-    width: 100%;
-    height: 320px;
-    max-height: 330px;
-  }
-
-  .owl-carousel .item img{
-    float: right;
-    width: 400px;
-    height: 300px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    padding-right:3rem ;
-  }
-  .owl-dots{
-    position: fixed;
-    padding: 3rem 1.2rem;
-    display: flex !important;
-    flex-direction: column;
-    transform: translateY(-240px);
-  }
-  .owl-dots button{
-    border-radius: 5rem;
-    margin: .3rem 0;
-  }
-  .owl-dots button span{
-    background:coral !important;
-    margin: 0rem .6rem !important;
-  }
-  .owl-dots .active{
-    border: 1px solid black !important;
-  }
-  .owl-dots .active span{
-    background: blue !important;
-    margin: .3rem .5rem !important;
-  }
-</style>
-  <div class="container">
-    <div class="col-6 border" style="height: 600px;">
-      <h4>Ramakrishna Mission</h4>
-      <div class="owl-carousel owl-theme border">
-        <div class="item"><img src="{{URL}}public/images/registration.svg"></div>
-        <div class="item"><img src="{{URL}}public/images/registration.svg"></div>
-        <div class="item"><img src="{{URL}}public/images/registration.svg"></div>
-      </div>
+    .active{
+    color:brown !important;
+    border-bottom: 1px solid brown;
+    }
+    </style>
+    
+    
+    <div class="row my-2">
+    
+    <div class="col-8">
+    <nav class="nav ">
+    <a class="nav-link active" href="#" id="tab-show-all"><i class="fas fa-table"></i> All <span id="total-show-all">(0)</span></a>
+    
+    <a class="nav-link" href="#" id="tab-show-trash"><i class="fas fa-trash"></i> Trash <span id="total-show-trash">(0)</span></a>
+    </nav>
     </div>
-    <div class="col-6">
-      
+    
+    <div class="col-4">
+    
+    <a class="btn btn-primary float-right" href="{{URL}}starter/index" role="button">Add New Starter </a>
+    
+    <a class="btn btn-danger float-right mr-2" style="display: none;" href="#" role="button" id="btn-delete-selected">Delete Selected </a>
+    <a class="btn btn-info float-right mr-2" style="display: none;" href="#" role="button" id="btn-restore-selected">Restore Selected </a>
     </div>
-  </div>
+    
+    </div>
+    <table id="starter" name="starter" class="table w-100">
+        <thead>
+          <tr>
+            <th scope="col"><input type="checkbox" id="check-all"></th>
+    
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Address</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Email</th>
+            <th scope="col">Action</th>
+         </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+           
+    {{ include('Template/alert.html') }}
 {% endblock %}
