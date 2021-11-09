@@ -237,7 +237,23 @@ use libs\FileUpload;
         $table="tbl".strtolower(substr(strrchr(get_class($this),"\\"),1));
         $db=self::getDB();
         if($pagination==false and $records==null){
-          echo json_encode($result=$db->select("SELECT * FROM $table"));
+          $result=$db->select("SELECT * FROM $table "); 
+          $total=$db->selectCount("SELECT * FROM $table");  
+          $response=new Response();
+          if($result){
+              $response->success = 1;
+              $response->records = $result;
+              $response->first=1;
+              $response->last=$total;
+              $response->total=$total;
+              $response->code=201;
+              return $response;
+            }else{
+              $response->success = 0;
+              $response->message= "Something went wrong";
+              $response->code=400;
+              return $response;
+            }
         }else{
           $result=$db->select("SELECT * FROM $table LIMIT 0,10"); 
           $total=$db->selectCount("SELECT * FROM $table");  
