@@ -81,7 +81,7 @@ class StarterActivity extends Controller
             if (URL::hasQuery()) {
                 $response=$starter->get(URL::toAndOperator());
             } else {
-                $response=$starter->all(false);
+                $response=$starter->all(false,'id DESC');
             }
             echo $response->toJSON();
         }

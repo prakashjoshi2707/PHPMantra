@@ -232,12 +232,12 @@ use libs\FileUpload;
     //         }
     //     }
     // }
-    public function all($pagination=false,$records=null)
+    public function all($pagination=false,$orderBy='id ASC',$records=null)
     {
         $table="tbl".strtolower(substr(strrchr(get_class($this),"\\"),1));
         $db=self::getDB();
         if($pagination==false and $records==null){
-          $result=$db->select("SELECT * FROM $table "); 
+          $result=$db->select("SELECT * FROM $table ORDER BY $orderBy "); 
           $total=$db->selectCount("SELECT * FROM $table");  
           $response=new Response();
           if($result){
@@ -255,7 +255,7 @@ use libs\FileUpload;
               return $response;
             }
         }else{
-          $result=$db->select("SELECT * FROM $table LIMIT 0,10"); 
+          $result=$db->select("SELECT * FROM $table ORDER BY $orderBy LIMIT 0,10"); 
           $total=$db->selectCount("SELECT * FROM $table");  
           $response=new Response();
           if($result){
