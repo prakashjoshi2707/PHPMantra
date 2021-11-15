@@ -867,6 +867,10 @@ public static function getTotal".($className)."(\$deleted=0)
       echo "<hr>";
    
       echo "<h1>ANDROID UI.xml</h1>";
+      echo "<h1>Create First activity named ".$className."Activity</h1>";
+      echo "<h1>Create Second activity named ".$className."ListActivity</h1>";
+      echo "<h1>Create Third activity named ".$className."DetailActivity</h1>";
+      echo "<h1>activity_".strtolower($className).".xml</h1>";
       foreach ($result as $value){
   
         if (
@@ -922,11 +926,45 @@ public static function getTotal".($className)."(\$deleted=0)
         }
         }
         echo  htmlspecialchars('
-        <Button
-          android:id="@+id/btnSave"
+        <!--Progress Button -->
+        <androidx.cardview.widget.CardView
+          android:id="@+id/btnParentSave"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="Save" />
+          android:layout_height="50dp"
+          app:cardBackgroundColor="#299617"
+          app:cardCornerRadius="10dp"
+          app:cardElevation="0dp">
+          <RelativeLayout
+              android:id="@+id/btnSave"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:clickable="true"
+              android:focusable="true">
+
+              <TextView
+                  android:id="@+id/btnTitle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:layout_centerInParent="true"
+                  android:layout_marginTop="30dp"
+                  android:text="SAVE"
+                  android:textColor="#fff"
+                  android:textSize="16dp"
+                  android:textStyle="bold" />
+
+              <ProgressBar
+                  android:id="@+id/btnProgress"
+                  android:layout_width="25dp"
+                  android:layout_height="25dp"
+                  android:layout_centerInParent="true"
+                  android:layout_marginTop="15dp"
+                  android:layout_marginRight="5dp"
+                  android:layout_toLeftOf="@id/btnTitle"
+                  android:indeterminateTint="#fff"
+                  android:visibility="gone" />
+
+          </RelativeLayout>
+    </androidx.cardview.widget.CardView>
         ');
         
         echo  htmlspecialchars('
@@ -941,6 +979,7 @@ public static function getTotal".($className)."(\$deleted=0)
         echo "<hr>";
       echo "<h1>ANDROID JAVA Code</h1>";
       echo "<h1>Class Definition (Create new class)</h1>";
+      echo "<h1>".$className.".java</h1>";
       $classVariable="";
       $localVaraible="";
       $properties="";
@@ -973,8 +1012,8 @@ public static function getTotal".($className)."(\$deleted=0)
       echo "<pre>
       public class $className {
 
-        private String $classVariable;
-        
+        public String $classVariable;
+        public $className() {}
         public $className($localVaraible) {
           $properties
         }
@@ -988,7 +1027,7 @@ public static function getTotal".($className)."(\$deleted=0)
 
       
 
-
+      echo "<h1>".$className."Activity.java</h1>";
       echo "//The view objects<br>";
       echo "private EditText ";
       $variable="";
@@ -1003,7 +1042,15 @@ public static function getTotal".($className)."(\$deleted=0)
        
        }
        echo rtrim($variable, ', ').";<br>";
-       echo "private Button btnSave, btnClose;<br><br>";
+       echo "private Button btnClose;<br><br>";
+       echo "private $className ".lcfirst($className)."<br><br>";
+       echo "//Progress Button
+private CardView btnParentSave;
+private RelativeLayout btnSave;
+private TextView btnTitle;
+private ProgressBar btnProgress;
+   
+Fetch fetch;<br><br>";
 
        echo "//initializing view objects<br> ";
        foreach ($result as $value){
@@ -1017,16 +1064,92 @@ public static function getTotal".($className)."(\$deleted=0)
         }
        
        }
-       echo "btnSave =findViewById(R.id.btnSave);<br>";
-       echo "btnClose =findViewById(R.id.btnClose);<br><br>";
+
+       echo "//Progress Button for save<br>";
+       echo "btnParentSave = findViewById(R.id.btnParentSave);<br>";
+       echo "btnSave = findViewById(R.id.btnSave);<br>";
+       echo "btnTitle = findViewById(R.id.btnTitle);<br>";
+       echo "btnProgress = findViewById(R.id.btnProgress);<br>";
+       echo "btnClose = findViewById(R.id.btnClose);<br>";
        echo "btnSave.setOnClickListener(this);<br>";
        echo "btnClose.setOnClickListener(this);<br><br>";
+       $initVaraible="";
+       $validation="";
+       foreach ($result as $value){
+        if (
+          $value['COLUMN_NAME']!="createdAt"  &&  $value['COLUMN_NAME']!="createdBy"  && $value['COLUMN_NAME']!="createdFrom"&&
+          $value['COLUMN_NAME']!="modifiedAt" && $value['COLUMN_NAME']!="modifiedBy" && $value['COLUMN_NAME']!="modifiedFrom"&&
+          $value['COLUMN_NAME']!="deletedAt" && $value['COLUMN_NAME']!="deletedBy" && $value['COLUMN_NAME']!="deletedFrom" && $value['COLUMN_NAME']!="deleted" && $value['COLUMN_NAME']!="status"
+        ) {
+          $declaration=$className.".".strtolower($value['COLUMN_NAME'])."="."et".strtolower($value['COLUMN_NAME']).".getText().toString();";
+          $initVaraible=$initVaraible."\t". $declaration."<br>";
+          
+          $columnName=strtolower($value['COLUMN_NAME']);
+          $columnDescription=ucwords($value['COLUMN_COMMENT']);
+          $controlName="et".ucwords($value['COLUMN_NAME']);
+
+          $validationRule="
+        if(Validation.isEmpty($className.".$columnName."))) {
+          $controlName.requestFocus();
+          $controlName.setError(\"$columnDescription cannot be empty\");
+        }";
+          $validation=$validation.$validationRule;
+        }
+       
+       }
+       $apiUrl=URL.strtolower($className)."/api";
        echo "<pre>
 @Override
 public void onClick(View v) {
   switch (v.getId()) {
     case R.id.btnSave:
         // onClick save button
+        $className ".lcfirst($className). "= new $className();
+        $initVaraible
+        //Convert second if to elseif
+        $validation
+        else {
+          btnProgress.setVisibility(View.VISIBLE);
+          btnTitle.setVisibility(View.VISIBLE);
+          btnParentSave.setCardBackgroundColor(Color.BLUE);
+          btnTitle.setText(\"Please wait...\");
+          btnTitle.setTextColor(Color.WHITE);
+          btnSave.setEnabled(false);
+          fetch=new Fetch(this, \"$apiUrl\", Request.Method.POST, student, new VolleyCallback() {
+              @Override
+              public void onSuccessResponse(String result) {
+                  try {
+                      JSONObject jsonObject = new JSONObject(result);
+                      if (jsonObject.getInt(\"success\") == 1) {
+                          Toast.makeText(MainActivity.this, \"Success\", Toast.LENGTH_SHORT).show();
+                          Intent intentShow = new Intent({$className}Activity.this, {$className}ListActivity.class);
+                          startActivity(intentShow);
+                      } else {
+                          btnProgress.setVisibility(View.GONE);
+                          btnTitle.setVisibility(View.VISIBLE);
+                          btnParentSave.setCardBackgroundColor(Color.parseColor(\"#299617\"));
+                          btnTitle.setText(\"SAVE\");
+                          btnTitle.setTextColor(Color.WHITE);
+                          btnSave.setEnabled(true);
+                      }
+
+                  } catch (JSONException e) {
+                      e.printStackTrace();
+                  }
+              }
+
+              @Override
+              public void onErrorResponse(String result) {
+                  Toast.makeText({$className}Activity.this, \"Please check network connection\", Toast.LENGTH_LONG).show();
+                  btnProgress.setVisibility(View.GONE);
+                  btnTitle.setVisibility(View.VISIBLE);
+                  btnParentSave.setCardBackgroundColor(Color.parseColor(\"#299617\"));
+                  btnTitle.setText(\"SAVE\");
+                  btnTitle.setTextColor(Color.WHITE);
+                  btnSave.setEnabled(true);
+              }
+          });
+        }
         break;
     case R.id.btnClose:
         // onClick close button
@@ -1037,5 +1160,557 @@ public void onClick(View v) {
   }
 }
        </pre>";
+       echo "<hr>";
+   
+       echo "<h1>Create new drawable resources named rounded_drawable.xml</h1>";
+       echo  htmlspecialchars('
+       <shape
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:shape="oval">
+          <solid   android:color="#666666"/>
+      </shape>
+       ');
+       echo "<hr>";
+   
+       echo "<h1>Create new layout->res named ".strtolower($className)."_list_item.xml</h1>";
+       echo "<b>Note: Check the following attribute of the view 
+       android:layout_below=\"@+id/element\"
+       android:layout_toEndOf=\"@+id/element\"
+       android:layout_toRightOf=\"@+id/element\"</b>";
+       echo "<pre>";
+       echo  htmlspecialchars('
+       <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:id="@+id/rl'.$className.'"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+          <TextView
+              android:id="@+id/tvId"
+              android:layout_width="40dp"
+              android:layout_height="40dp"
+              android:layout_marginTop="10dp"
+              android:background="@drawable/rounded_drawable"
+              android:gravity="center"
+              android:text="Id"
+              android:textColor="@android:color/white"
+              android:textSize="20sp" />
+       ');
+       foreach ($result as $value){
+  
+        if (
+          $value['COLUMN_NAME']!="createdAt"  &&  $value['COLUMN_NAME']!="createdBy"  && $value['COLUMN_NAME']!="createdFrom"&&
+          $value['COLUMN_NAME']!="modifiedAt" && $value['COLUMN_NAME']!="modifiedBy" && $value['COLUMN_NAME']!="modifiedFrom"&&
+          $value['COLUMN_NAME']!="deletedAt" && $value['COLUMN_NAME']!="deletedBy" && $value['COLUMN_NAME']!="deletedFrom" && $value['COLUMN_NAME']!="deleted" && $value['COLUMN_NAME']!="status"
+        ) {
+
+            
+            if($value['COLUMN_NAME']!="id" ){
+              echo  htmlspecialchars('
+              <TextView
+                android:id="@+id/tv'.ucwords($value['COLUMN_NAME']).'"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_below="@+id/'.$lastElement.'"
+                android:layout_toEndOf="@+id/tvId"
+                android:layout_toRightOf="@+id/tvId"
+                android:text="'.ucwords($value['COLUMN_NAME']).'"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+              ');
+            }
+            $lastElement='tv'.ucwords($value['COLUMN_NAME']);
+          
+          }
+        }
+       
+        
+        echo  htmlspecialchars('
+              <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/tvName"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="Time" />
+              <ImageView
+                android:id="@+id/ivFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tvTime"
+                android:padding="5dp"
+                android:src="@drawable/ic_baseline_star_24" />
+              <ImageView
+                android:id="@+id/ivDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/ivFavorite"
+                android:padding="5dp"
+                android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+        </RelativeLayout>
+        ');
+        echo "</pre>";
+       echo "<hr>";
+   
+      echo "<h1>Adapter For RecyclerView</h1>";
+      echo "<h1>Create new class named ".$className."Adapter.java</h1>";
+      echo "<pre>";
+      $objectName=strtolower($className);
+       $initVaraible="";
+       $initVaraible2="";
+       $initVaraible3="";
+       $initVaraible4="";
+       $initVaraible5="";
+       $validation="";
+       $classVariable='public TextView ';
+       foreach ($result as $value){
+        if (
+          $value['COLUMN_NAME']!="createdAt"  &&  $value['COLUMN_NAME']!="createdBy"  && $value['COLUMN_NAME']!="createdFrom"&&
+          $value['COLUMN_NAME']!="modifiedAt" && $value['COLUMN_NAME']!="modifiedBy" && $value['COLUMN_NAME']!="modifiedFrom"&&
+          $value['COLUMN_NAME']!="deletedAt" && $value['COLUMN_NAME']!="deletedBy" && $value['COLUMN_NAME']!="deletedFrom" && $value['COLUMN_NAME']!="deleted" && $value['COLUMN_NAME']!="status"
+        ) {
+            $declaration=$className.".".strtolower($value['COLUMN_NAME'])."="."tv".strtolower($value['COLUMN_NAME']).".getText().toString();";
+            
+            $declaration="holder.tv".ucwords($value['COLUMN_NAME']).".setText({$objectName}.get".ucwords($value['COLUMN_NAME'])."());";
+            $initVaraible=$initVaraible."\t". $declaration."<br>";
+            $classVariable=$classVariable."tv".ucwords($value['COLUMN_NAME']).", ";
+
+            $declaration2="this.tv".ucwords($value['COLUMN_NAME'])." = itemView.findViewById(R.id.tv".ucwords($value['COLUMN_NAME']).");";
+            $initVaraible2=$initVaraible2."\t". $declaration2."<br>";
+
+            $declaration3="{$objectName}.".strtolower($value['COLUMN_NAME'])."=jsonArray.getJSONObject(i).getString(\"".strtolower($value['COLUMN_NAME'])."\")";
+            $initVaraible3=$initVaraible3."\t". $declaration3."<br>";
+
+            $declaration4="tv".ucwords($value['COLUMN_NAME'])." = findViewById(R.id.tv".ucwords($value['COLUMN_NAME']).");";
+            $initVaraible4=$initVaraible4."\t". $declaration4."<br>";
+            
+            $declaration5="tv".ucwords($value['COLUMN_NAME']).".setText({$objectName}.get".ucwords($value['COLUMN_NAME'])."());";;
+            $initVaraible5=$initVaraible5."\t". $declaration5."<br>";
+        }
+               
+       }
+       $classVariable= rtrim($classVariable, ', ');
+       $apiUrl=URL.strtolower($className)."/api";
+      
+      echo "
+      public class {$className}Adapter extends RecyclerView.Adapter<StudentAdapter.ViewHolder> implements Filterable {
+        private List<{$className}> list =new ArrayList<>();
+        private List<{$className}> listAll=new ArrayList<>();
+        private Context context;
+        // RecyclerView recyclerView;
+        public {$className}Adapter(Context context, List<{$className}> list) {
+            this.list = list;
+            this.context=context;
+            this.listAll=new ArrayList<>(list);
+    
+        }
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            View listItem= layoutInflater.inflate(R.layout.{$objectName}_list_item, parent, false);
+            ViewHolder viewHolder = new ViewHolder(listItem);
+            return viewHolder;
+        }
+    
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+           {$className} {$objectName}=list.get(position);
+              $initVaraible
+                
+            holder.ivDetail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(view.getContext(),\"click on item: \"+{$objectName}.getId(), Toast.LENGTH_LONG).show();
+                    Intent intentDetail = new Intent(context, {$className}DetailActivity.class);
+                    //Create the bundle
+                    Bundle bundle = new Bundle();
+                    //Add your data to bundle
+                    bundle.putString(\"ID\", {$objectName}.getId());
+                    //Add the bundle to the intent
+                    intentDetail.putExtras(bundle);
+                    context.startActivity(intentDetail);
+                }
+            });
+            holder.rl{$className}.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Toast.makeText(view.getContext(),\"click on item: \"+{$objectName}.getId(), Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            });
+    
+        }
+    
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+    
+        @Override
+        public Filter getFilter() {
+            return filter;
+        }
+        Filter filter=new Filter() {
+            //run on background thread
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                List<Student> filteredList=new ArrayList<>();
+                Log.d(\"FILTER LEN\", String.valueOf(listAll.size()));
+                Log.d(\"FILTER LEN\", String.valueOf(list.size()));
+    
+                if(constraint==null || constraint.length()==0){
+                    Log.d(\"FILTER\",\"EMPTY\");
+                    filteredList.addAll(listAll);
+    
+                }else{
+                    Log.d(\"FILTER\",\"FILTER\");
+                    String filterPattern=constraint.toString().toLowerCase().trim();
+                    Log.d(\"FILTER\",filterPattern);
+                    for({$className} {$objectName}:listAll){
+                        if(student.getName().toLowerCase().contains(filterPattern)){
+                            Log.d(\"FILTER CLASS\",{$objectName}.getId());
+                            filteredList.add({$objectName});
+                        }
+                    }
+                }
+                FilterResults filterResults=new FilterResults();
+                filterResults.values=filteredList;
+                Log.d(\"FILTER\",\"FILTER-RESULT\");
+                Log.d(\"FILTER\",filterResults.toString());
+                return filterResults;
+            }
+            //run on UI thread
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                list.clear();
+                list.addAll((ArrayList< {$className}>) results.values);
+                Log.d(\"FILTER\",\"Publish\");
+                
+                notifyDataSetChanged();
+            }
+        };
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            $classVariable;
+            public ImageView ivDetail;
+            public RelativeLayout rl{$className};
+    
+            public ViewHolder(View itemView) {
+                super(itemView);
+                      $initVaraible2
+                this.ivDetail=itemView.findViewById(R.id.ivDetail);
+                this.rl{$className}= itemView.findViewById(R.id.rl{$className});
+    
+            }
+        }
+    }
+      ";
+      echo "</pre>";
+      echo "<hr>";
+      echo "<h1>activity_".strtolower($className)."_list.xml</h1>";
+      echo "<pre>";
+      echo  htmlspecialchars('
+      <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:id="@+id/swipeRefreshLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+          <androidx.recyclerview.widget.RecyclerView
+              android:id="@+id/rv'.$className.'"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginStart="5dp"
+              android:layout_marginEnd="5dp"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintHorizontal_bias="0.0"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintVertical_bias="0.0" />
+      </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+          android:id="@+id/fab"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom|end"
+          android:layout_marginEnd="@dimen/fab_margin"
+          android:layout_marginBottom="16dp"
+          app:layout_constraintRight_toRightOf="parent"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:srcCompat="@android:drawable/ic_input_add" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+      ');
+      echo "</pre>";
+     echo "<hr>";
+     
+     echo "<h1>add res->menu then create new file {$objectName}_menu.xml</h1>";
+     echo "<pre>";
+     echo  htmlspecialchars('
+     <menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+        <item android:id="@+id/action_search"
+            android:title="Search"
+            android:icon="@drawable/ic_baseline_search_24"
+            app:showAsAction="always|collapseActionView"
+            app:actionViewClass="androidx.appcompat.widget.SearchView"
+        />
+    </menu>
+     ');
+     echo "</pre>";
+     echo "<hr>";
+
+      echo "<h1>".$className."ListActivity.java</h1>";
+      echo "<pre>";
+      echo "
+      RecyclerView rv{$className};
+      StudentAdapter {$objectName}Adapter;
+      FloatingActionButton fab;
+      ProgressBar progressBar;
+      SwipeRefreshLayout swipeRefreshLayout;
+      private List< {$className}> {$objectName}List=new ArrayList<>();
+  
+      Fetch fetch;
+      progressBar=findViewById(R.id.progressBar);
+       loadData();
+
+        rv{$className} = findViewById(R.id.rv{$className});
+        fab = findViewById(R.id.fab);
+        {$objectName}Adapter= new {$className}Adapter(this,{$objectName}List);
+        rv{$className}.setHasFixedSize(true);
+        rv{$className}.setLayoutManager(new LinearLayoutManager(this));
+        rv{$className}.addItemDecoration(new DividerItemDecoration({$className}ListActivity.this, DividerItemDecoration.VERTICAL));
+        rv{$className}.setAdapter({$objectName}Adapter);
+
+        fab.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intentAdd = new Intent({$className}ListActivity.this, {$className}Activity.class);
+                startActivity(intentAdd);
+            }
+        });
+
+        swipeRefreshLayout=findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                {$objectName}List.clear();
+                loadData();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+    }
+    public void loadData(){
+        fetch=new Fetch(this, \"{$apiUrl}\", Request.Method.GET, null, new VolleyCallback() {
+
+            @Override
+            public void onSuccessResponse(String result) {
+                Log.d(\"DATA\",result);
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.getInt(\"success\") == 1) {
+                        JSONArray jsonArray= jsonObject.getJSONArray(\"records\");
+
+                        Log.d(\"LENGTH\", String.valueOf(jsonArray.length()));
+                        for(int i=0;i< jsonArray.length(); i++){
+
+                            {$className} {$objectName} = new {$className}();
+                            $initVaraible3
+                            {$objectName}List.add({$objectName});
+                        }
+
+
+                    }
+
+                    {$objectName}Adapter.notifyDataSetChanged();
+                    progressBar.setVisibility(View.GONE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String result) {
+
+            }
+        });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.{$objectName}_menu, menu);
+        MenuItem menuItem=menu.findItem(R.id.action_search);
+        SearchView searchView= (SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d(\"FILTER\",newText);
+                {$objectName}Adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+        return true;
+    }
+      ";
+      echo "</pre>";
+      echo "<hr>";
+      echo "<h1>activity_".strtolower($className)."_detail.xml</h1>";
+      echo "<pre>";
+      echo  htmlspecialchars('
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+      ');
+      foreach ($result as $value){
+  
+        if (
+          $value['COLUMN_NAME']!="createdAt"  &&  $value['COLUMN_NAME']!="createdBy"  && $value['COLUMN_NAME']!="createdFrom"&&
+          $value['COLUMN_NAME']!="modifiedAt" && $value['COLUMN_NAME']!="modifiedBy" && $value['COLUMN_NAME']!="modifiedFrom"&&
+          $value['COLUMN_NAME']!="deletedAt" && $value['COLUMN_NAME']!="deletedBy" && $value['COLUMN_NAME']!="deletedFrom" && $value['COLUMN_NAME']!="deleted" && $value['COLUMN_NAME']!="status"
+        ) {
+              echo  htmlspecialchars('
+            <TextView
+            android:id="@+id/tv'.ucwords($value['COLUMN_NAME']).'"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+
+              ');
+            }
+           
+          
+          }
+        echo  htmlspecialchars('
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="100"
+            >
+
+
+        <Button
+            android:id="@+id/btnEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:layout_marginRight="2dp"
+            android:text="Edit" />
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:text="Delete" />
+        </LinearLayout>
+
+    </LinearLayout>
+        ');
+      echo "<hr>";
+      echo "<h1>".$className."DetailActivity.java</h1>";
+      echo "<pre>";
+      echo "
+      $classVariable
+      ProgressBar progressBar ;
+      public Button btnEdit,btnDelete;
+      Fetch fetch;
+      $initVaraible4
+      
+      progressBar=findViewById(R.id.progressBar);
+      btnEdit=findViewById(R.id.btnEdit);
+      btnDelete=findViewById(R.id.btnDelete);
+      btnEdit.setOnClickListener(this);
+      btnDelete.setOnClickListener(this);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            String value = bundle.getString(\"ID\");
+            fetch=new Fetch(this, \"{$apiUrl}?id=\"+value, Request.Method.GET, null, new VolleyCallback() {
+
+                @Override
+                public void onSuccessResponse(String result) {
+                    Log.d(\"DATA\",result);
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if (jsonObject.getInt(\"success\") == 1) {
+                            JSONArray jsonArray= jsonObject.getJSONArray(\"records\");
+
+                            Log.d(\"LENGTH\", String.valueOf(jsonArray.length()));
+                            for(int i=0;i< jsonArray.length();i++){
+
+                                {$className} {$objectName} = new {$className}();
+                                $initVaraible3
+                                $initVaraible5
+                               
+                            }
+                            progressBar.setVisibility(View.GONE);
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onErrorResponse(String result) {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnEdit:
+                // onClick close button
+                Intent intentEdit = new Intent(ScrollingActivity.this, MainActivity.class);
+
+                startActivity(intentEdit);
+                break;
+            case R.id.btnDelete:
+                // onClick close button
+                Intent intentDelete = new Intent(ScrollingActivity.this, MainActivity3.class);
+                startActivity(intentDelete);
+                break;
+            default:
+                break;
+        }
+    }
+      ";
     }
 }
