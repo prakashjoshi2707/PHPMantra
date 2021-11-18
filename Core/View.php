@@ -20,10 +20,10 @@ class View
      *
      * @return void
      */
-    public static $twig = null;
+    static $twig = null;
     public static function render($view, $args=[])
     {
-        extract($args, EXTR_SKIP);
+        extract($args,EXTR_SKIP);
         $file = "App/Views/$view";  // relative to Core directory
        
         if (is_readable($file)) {
@@ -43,6 +43,8 @@ class View
      */
     public static function renderTemplate($template, $args = [])
     {
+       
+       
         Session::init();
         $user=Session::get('USERNAME');
         $userType=Session::get('USERTYPE');
@@ -52,13 +54,13 @@ class View
             self::$twig = new \Twig_Environment($loader);
             self::$twig->addGlobal("URL", URL);
             self::$twig->addGlobal("USERNAME", $user);
-            self::$twig->addGlobal("USERTYPE", $userType);
+            self::$twig->addGlobal("USERTYPE", $userType);        
+           
         }
         
         echo self::$twig->render($template, $args);
     }
-    public static function addGlobal($key, $value)
-    {
+    public static function addGlobal($key,$value) {
         self::$twig->addGlobal($key, $value);
     }
 }

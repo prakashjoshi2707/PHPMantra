@@ -1,8 +1,6 @@
 <?php
 namespace libs;
-
-class Header
-{
+class Header{
     public static function JSONReadable()
     {
         header("Access-Control-Allow-Origin: *");

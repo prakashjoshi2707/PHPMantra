@@ -26,6 +26,7 @@ class StarterActivity extends Controller
      */
     protected function before()
     {
+            
     }
 
     /**
@@ -35,6 +36,7 @@ class StarterActivity extends Controller
      */
     protected function after()
     {
+       
     }
 
     /**
@@ -75,16 +77,16 @@ class StarterActivity extends Controller
     public function api(Request $request)
     {
         $starter=new Starter();
-        if (Request::GET()) {
+        if(Request::GET()){
             if (URL::hasQuery()) {
                 $response=$starter->get(URL::toAndOperator());
             } else {
-                $response=$starter->all(false, 'id DESC');
+                $response=$starter->all(false,'id DESC');
             }
             echo $response->toJSON();
         }
-        if (Request::POST()) {
-            Validation::check($request, [
+        if(Request::POST()){
+           Validation::check($request,[
             
         'name'=>[
                 'required'=>true,
@@ -104,15 +106,16 @@ class StarterActivity extends Controller
               ],
            ]);
 
-            if (Validation::isPassed()) {
-                $this->store($request);
-            } else {
-                print_r(Validation::getErrors());
-            }
+           if (Validation::isPassed()) {
+               $this->store($request);
+           } else {
+               print_r(Validation::getErrors());
+           }
+           
         }
-        if (Request::PUT()) {
+        if(Request::PUT()){
             //echo "PUT";
-            Validation::check($request, [
+            Validation::check($request,[
                 'id'=>[
                     'required'=>true,
                     
@@ -140,17 +143,20 @@ class StarterActivity extends Controller
             } else {
                 print_r(Validation::getErrors());
             }
+            
         }
-        if (Request::DELETE()) {
+        if(Request::DELETE()){
             //echo "DELETE";
             $this->delete($request);
             //print_r($response->toJSON());
         }
+       
     }
 
 
     public function create()
     {
+        
     }
     public function generate()
     {
@@ -204,21 +210,22 @@ class StarterActivity extends Controller
 
     public function delete(Request $request)
     {
-        if (is_array($request->input["id"])) {
+        if(is_array($request->input["id"])){
             $id=implode(',', $request->input["id"]);
-        } else {
-            $id= $request->input["id"];
-        }
+         }else{
+           $id= $request->input["id"];
+         }
         $starter=new Starter();
-        if ($request->input["tag"]=="delete") {
-            $starter->deleted=1;
-        } else {
-            $starter->deleted=0;
+        if($request->input["tag"]=="delete"){
+           $starter->deleted=1;
+         }else{
+           $starter->deleted=0;
         }
         $starter->deletedAt=date('Y-m-d H:i:s');
         $starter->deletedBy=Session::get('USERNAME');
         $starter->deletedFrom=$_SERVER['REMOTE_ADDR'];
         $response=$starter->update(" id IN ($id) ");
         echo $response->toJSON();
+        
     }
 }

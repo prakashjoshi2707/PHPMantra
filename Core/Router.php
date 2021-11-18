@@ -3,7 +3,6 @@
 namespace Core;
 
 use libs\Request;
-
 /**
  * Router
  *
@@ -123,7 +122,7 @@ class Router
                 if (is_callable([$controller_object, $action])) {
                     $request=new Request();
                     $controller_object->$action($request);
-                } else {
+                }  else {
                     //echo "Method $action (in controller $controller) not found";
                     throw new \Exception("Method $action (in controller $controller) not found");
                 }
@@ -133,7 +132,7 @@ class Router
             }
         } else {
             //echo 'No route matched.';
-            throw new \Exception('No route matched.', 404);
+            throw new \Exception('No route matched.',404);
         }
     }
     
