@@ -1,0 +1,219 @@
+ONE PROJECT ONE LIBRARY / Create the following files and copy and paste the code
+===============================================================================================================
+1) Create a new directory named: libs:
+===============================================================================================================
+2) Create a new java class file named: RequestQueueVolley.java
+===============================================================================================================
+package libs;
+
+import android.content.Context;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
+public class RequestQueueVolley {
+    private static RequestQueueVolley mInstance;
+    private RequestQueue mRequestQueue;
+    private static Context context;
+
+    private RequestQueueVolley(Context context) {
+        this.context = context;
+        mRequestQueue = getRequestQueue();
+    }
+
+    public static synchronized RequestQueueVolley getInstance(Context context) {
+        if (mInstance == null) {
+            mInstance = new RequestQueueVolley(context);
+        }
+        return mInstance;
+    }
+
+    public RequestQueue getRequestQueue() {
+        if (mRequestQueue == null) {
+            // getApplicationContext() is key, it keeps you from leaking the
+            // Activity or BroadcastReceiver if someone passes one in.
+            mRequestQueue = Volley.newRequestQueue(context);
+        }
+        return mRequestQueue;
+    }
+
+    public <T> void addToRequestQueue(Request<T> req) {
+        getRequestQueue().add(req);
+    }
+}
+######################################## End of RequestQueueVolley ##############################################
+================================================================================================================
+3) Create another java class file named: Fetch.java
+================================================================================================================
+package libs;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+import online.rkmhikai.sample.Student;
+
+public class Fetch {
+
+    public static String capitalize(String str)
+    {
+        if(str == null) return null;
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+    public  Fetch(Context context, String url, int method, Student student, final VolleyCallback callback)  {
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(method, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("STUDENT-INSIDE",response);
+                        callback.onSuccessResponse(response);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("STUDENT", error.toString());
+                        callback.onErrorResponse(error.toString());
+
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+//                    params.put("base_url", student.getId());
+//                    params.put("long_url", student.getName());
+                //Field list form object
+                Field[] fields= student.getClass().getFields();
+
+                for (Field field : fields) {
+                    Log.d("STUDENT","Field Name = " + field.getName());
+                    java.lang.reflect.Method method = null;
+                    try {
+                        method = student.getClass().getMethod("get"+capitalize(field.getName()));
+                        Log.d("STUDENT", (String) method.invoke(student));
+                        params.put(field.getName(),(String) method.invoke(student));
+                        Log.d("STUDENT",field.getName());
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                return params;
+            }
+        };
+
+        // Add the request to the RequestQueue.
+        RequestQueueVolley.getInstance(context).addToRequestQueue(stringRequest);
+
+    }
+
+}
+######################################## End of Fetch ##############################################
+==============================================================================================================
+4) Create interface new file named: VolleyCallback.java
+==============================================================================================================
+package libs;
+
+public interface VolleyCallback {
+    void onSuccessResponse(String result);
+    void onErrorResponse(String result);
+}
+######################################## End of VolleyCallback ##############################################
+================================================================================================================
+5) create java class file named: Validation.class
+===============================================================================================================
+package libs;
+
+import android.util.Log;
+
+public class Validation {
+    public static boolean  isEmpty(String value){
+        if (value.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static boolean isValidPassword(String password){
+        if (password.isEmpty()) {
+            return true;
+        }else{
+            String check="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+            if(!password.matches(check)){
+                return true;
+            }else {
+                return true;
+            }
+        }
+
+    }
+    public static boolean isValidEmail(String email){
+        if (email.isEmpty()) {
+            return true;
+        }else {
+            String check = "^([a-zA-Z0-9.]+)@([a-zA-Z]+)\\.([a-zA-Z]+)$";
+            if (!email.matches(check)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public static boolean isValidText(String value){
+        if (value.isEmpty()) {
+            return true;
+        }else {
+            String check = "^[a-zA-Z ]+$";
+            if (!value.matches(check)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    public static boolean isValidDate(String date){
+        if (date.isEmpty()) {
+            return true;
+        }else {
+            String check = "^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$";
+            if (!date.matches(check)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    public static boolean isValidPhone(String phone){
+        if (phone.isEmpty()) {
+            return true;
+        }else {
+            String check = "^[0-9]{10}$";
+            if (!phone.matches(check)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+}
+######################################## End of Validation ##############################################
+========================================END OF LIBRARY====================================================

@@ -1,0 +1,17 @@
+{% extends "Template/AppTheme.Light.V1.html" %}
+{% block title %}Starter Index{% endblock %}
+{% block body %}
+<form method="POST" action="starter/api" enctype="multipart/form-data" id="form-starter" name="form-starter">
+   
+    <input type="hidden" class="form-control" id="id" name="id"  placeholder="Enter ID">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" name="name" maxlength="250" placeholder="Enter Name">
+    <label for="address" class="form-label">Address</label>
+    <textarea class="form-control"  id="address" name="address" maxlength="65535" placeholder="Enter Address"  rows="2"></textarea>
+    <label for="phone" class="form-label">Phone</label>
+    <input type="text" class="form-control" id="phone" name="phone"  placeholder="Enter Phone">
+    <label for="email" class="form-label">Email</label>
+    <input type="text" class="form-control" id="email" name="email" maxlength="250" placeholder="Enter Email">
+  <button type="submit" id="submit" name="submit" class="btn btn-primary">SAVE</button>
+  </form>
+{% endblock %}

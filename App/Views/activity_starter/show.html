@@ -1,0 +1,50 @@
+{% extends "Template/AppTheme.Light.V1.html" %}
+{% block title %}Starter Show{% endblock %}
+{% block body %}
+
+<style>
+    .active{
+    color:brown !important;
+    border-bottom: 1px solid brown;
+    }
+    </style>
+    
+    
+    <div class="row my-2">
+    
+    <div class="col-8">
+    <nav class="nav ">
+    <a class="nav-link active" href="#" id="tab-show-all"><i class="fas fa-table"></i> All <span id="total-show-all">(0)</span></a>
+    
+    <a class="nav-link" href="#" id="tab-show-trash"><i class="fas fa-trash"></i> Trash <span id="total-show-trash">(0)</span></a>
+    </nav>
+    </div>
+    
+    <div class="col-4">
+    
+    <a class="btn btn-primary float-right" href="{{URL}}starter/index" role="button">Add New Starter </a>
+    
+    <a class="btn btn-danger float-right mr-2" style="display: none;" href="#" role="button" id="btn-delete-selected">Delete Selected </a>
+    <a class="btn btn-info float-right mr-2" style="display: none;" href="#" role="button" id="btn-restore-selected">Restore Selected </a>
+    </div>
+    
+    </div>
+    <table id="starter" name="starter" class="table w-100">
+        <thead>
+          <tr>
+            <th scope="col"><input type="checkbox" id="check-all"></th>
+    
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Address</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Email</th>
+            <th scope="col">Action</th>
+         </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+           
+    {{ include('Template/Alert.Light.V1.html') }}
+{% endblock %}

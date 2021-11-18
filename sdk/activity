@@ -1,0 +1,107 @@
+#!/usr/bin/php
+<?php
+//    print_r($argc);
+//    print_r($argv);
+   if($argc==3 && $argv[1]=='--create' && $argv[2] !=''){
+      // echo "Creating new {$argv[2]} activity....\n";
+
+      $classname=ucwords(strtolower($argv[2]));
+      $objectname=strtolower($argv[2]);
+      // Controller
+      $activity_name=$classname."Activity.php";
+
+      $controller = file_get_contents(__DIR__."/tools/App/Controllers/StarterActivity.html");
+      $controller = str_replace('{{classname}}', $classname, $controller);
+      $controller = str_replace('{{objectname}}', $objectname, $controller);
+      file_put_contents(dirname(__DIR__)."/App/Controllers/{$activity_name}",$controller);
+
+      //Model
+      $model_name=$classname.".php";
+      $model = file_get_contents(__DIR__."/tools/App/Models/Starter.html");
+      $model = str_replace('{{classname}}', $classname, $model);
+      file_put_contents(dirname(__DIR__)."/App/Models/{$model_name}",$model);
+
+      // View
+      $view_name=$objectname;
+      $responseA=copydir(__DIR__."/tools/App/Views/activity_starter",dirname(__DIR__)."/App/Views/activity_{$view_name}");
+      if($responseA){
+         echo "Created new {$view_name} view....\n";
+      }
+      $view = file_get_contents(dirname(__DIR__)."/App/Views/activity_{$view_name}/index.html");
+      $view = str_replace('{{classname}}', $classname, $view);
+      file_put_contents(dirname(__DIR__)."/App/Views/activity_{$view_name}/index.html",$view);
+
+      $view = file_get_contents(dirname(__DIR__)."/App/Views/activity_{$view_name}/show.html");
+      $view = str_replace('{{classname}}', $classname, $view);
+      file_put_contents(dirname(__DIR__)."/App/Views/activity_{$view_name}/show.html",$view);
+
+      $view = file_get_contents(dirname(__DIR__)."/App/Views/activity_{$view_name}/detail.html");
+      $view = str_replace('{{classname}}', $classname, $view);
+      file_put_contents(dirname(__DIR__)."/App/Views/activity_{$view_name}/detail.html",$view);
+
+    //   Javascript
+      $view_name=$objectname;
+      // $responseA=copydir(__DIR__."/tools/public/javascript/activity_starter",dirname(__DIR__)."/public/javascript/activity_{$view_name}");
+      // if($responseA){
+      //    echo "Created new {$view_name} javascript class....\n";
+      // }
+      $responseDir=mkdir(dirname(__DIR__)."/public/javascript/activity_".$view_name);
+      if($responseDir){
+         $indexFile="index.js";
+         $indexContent = file_get_contents(__DIR__."/tools/public/javascript/activity_starter/index.html");
+         $indexContent = str_replace('{{classname}}', $classname, $indexContent);
+         $indexContent = str_replace('{{objectname}}', $objectname, $indexContent);
+         file_put_contents(dirname(__DIR__)."/public/javascript/activity_{$view_name}/index.js",$indexContent);
+         
+         $showFile="show.js";
+         $showContent = file_get_contents(__DIR__."/tools/public/javascript/activity_starter/show.html");
+         $showContent = str_replace('{{classname}}', $classname, $showContent);
+         $showContent = str_replace('{{objectname}}', $objectname, $showContent);
+         file_put_contents(dirname(__DIR__)."/public/javascript/activity_{$view_name}/show.js",$showContent);
+
+         $detailFile="show.js";
+         $detailContent = file_get_contents(__DIR__."/tools/public/javascript/activity_starter/detail.html");
+         $detailContent = str_replace('{{classname}}', $classname, $detailContent);
+         $detailContent = str_replace('{{objectname}}', $objectname, $detailContent);
+         file_put_contents(dirname(__DIR__)."/public/javascript/activity_{$view_name}/detail.js",$detailContent);
+
+         echo "Created new {$view_name} javascript class....\n";
+      }
+      
+      // Stylesheet
+      $view_name=$objectname;
+      $responseA=copydir(__DIR__."/tools/public/style/activity_starter",dirname(__DIR__)."/public/style/activity_{$view_name}");
+      if($responseA){
+         echo "Created new {$view_name} stylesheet files....\n";
+      }
+   }
+
+   function copydir($src, $dst) { 
+  
+      // open the source directory
+      $dir = opendir($src); 
+    
+      // Make the destination directory if not exist
+      @mkdir($dst); 
+    
+      // Loop through the files in source directory
+      while( $file = readdir($dir) ) { 
+    
+          if (( $file != '.' ) && ( $file != '..' )) { 
+              if ( is_dir($src . '/' . $file) ) 
+              { 
+    
+                  // Recursively calling custom copy function
+                  // for sub directory 
+                  custom_copy($src . '/' . $file, $dst . '/' . $file); 
+    
+              } 
+              else { 
+                  copy($src . '/' . $file, $dst . '/' . $file); 
+              } 
+          } 
+      } 
+      closedir($dir);
+      return 1;
+  } 
+?>
